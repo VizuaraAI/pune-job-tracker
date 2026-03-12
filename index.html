@@ -1,0 +1,2230 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Roles Pipeline - Pune Banking Job Search</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --surface2: #242836;
+    --border: #2e3347;
+    --text: #e4e6f0;
+    --text-dim: #8b8fa3;
+    --accent: #6c7bff;
+    --accent-glow: rgba(108,123,255,0.15);
+    --green: #34d399;
+    --green-bg: rgba(52,211,153,0.12);
+    --red: #f87171;
+    --red-bg: rgba(248,113,113,0.12);
+    --yellow: #fbbf24;
+    --yellow-bg: rgba(251,191,36,0.12);
+    --blue: #60a5fa;
+    --blue-bg: rgba(96,165,250,0.12);
+    --purple: #a78bfa;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.5;
+  }
+  .topbar {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .topbar h1 {
+    font-size: 18px; font-weight: 700;
+    background: linear-gradient(135deg, var(--accent), var(--purple));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .topbar .sub { color: var(--text-dim); font-size: 13px; }
+  .container { max-width: 1800px; margin: 0 auto; padding: 24px 32px; }
+  .summary { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .summary .chip {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 8px; padding: 8px 16px; font-size: 13px; font-weight: 600;
+  }
+  .summary .chip .num { font-size: 20px; font-weight: 800; margin-right: 6px; }
+  .filters { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; align-items: center; }
+  .filter-btn {
+    background: var(--surface); border: 1px solid var(--border); color: var(--text-dim);
+    padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 600;
+    cursor: pointer; transition: all .2s;
+  }
+  .filter-btn:hover, .filter-btn.active {
+    background: var(--accent-glow); border-color: var(--accent); color: var(--text);
+  }
+  .sep { width:1px; height:20px; background:var(--border); margin:0 4px; }
+  .table-wrap {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; overflow-x: auto;
+  }
+  table { width: 100%; border-collapse: collapse; min-width: 1500px; }
+  thead { background: var(--surface2); }
+  th {
+    padding: 10px 12px; text-align: left; font-size: 10px; text-transform: uppercase;
+    letter-spacing: .5px; color: var(--text-dim); font-weight: 600; white-space: nowrap;
+  }
+  td {
+    padding: 9px 12px; font-size: 12px; border-top: 1px solid var(--border); vertical-align: top;
+  }
+  tr:hover td { background: var(--surface2); }
+  tr.hidden { display: none; }
+  .pill {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; white-space: nowrap;
+  }
+  .pill.yes { background: var(--green-bg); color: var(--green); }
+  .pill.no { background: var(--red-bg); color: var(--red); }
+  .pill.verify { background: var(--yellow-bg); color: var(--yellow); }
+  .pill.hybrid { background: var(--blue-bg); color: var(--blue); }
+  .seniority-badge {
+    display: inline-block; padding: 2px 8px; border-radius: 4px;
+    font-size: 11px; font-weight: 600; text-transform: uppercase;
+    background: var(--surface2); color: var(--text-dim);
+  }
+  .func-tag {
+    display: inline-block; padding: 2px 8px; border-radius: 4px;
+    font-size: 11px; background: rgba(108,123,255,0.1); color: var(--accent);
+  }
+  .apply-link {
+    display: inline-block; padding: 4px 12px; border-radius: 6px;
+    font-size: 12px; font-weight: 600; text-decoration: none;
+    background: var(--accent); color: #fff; transition: all .2s; white-space: nowrap;
+  }
+  .apply-link:hover { opacity: .85; transform: translateY(-1px); }
+  .note { font-size: 10px; color: var(--text-dim); margin-top: 2px; line-height: 1.3; }
+  .company-barclays { border-left: 3px solid #00aeef; }
+  .company-ubs { border-left: 3px solid #e60000; }
+  .company-bny { border-left: 3px solid #6c7bff; }
+  .company-db { border-left: 3px solid #0018a8; }
+  .mastery-text {
+    font-size: 10px; color: var(--text-dim); line-height: 1.4;
+    max-width: 260px;
+  }
+  .date-text { font-size: 11px; color: var(--text-dim); white-space: nowrap; }
+  @media (max-width: 768px) {
+    .container { padding: 16px; }
+    .topbar { padding: 12px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div>
+    <h1>Roles Pipeline</h1>
+    <div class="sub">Pune Banking Job Search &middot; 12 Mar 2026</div>
+  </div>
+  <div class="sub">49 open roles tracked</div>
+</div>
+
+<div class="container">
+  <div class="summary">
+    <div class="chip"><span class="num">49</span> Total</div>
+    
+    <div class="chip"><span class="num">13</span> BNY Mellon</div>
+    
+    <div class="chip"><span class="num">25</span> Barclays</div>
+    
+    <div class="chip"><span class="num">11</span> UBS</div>
+    
+  </div>
+
+  <div class="filters">
+    <button class="filter-btn active" onclick="filterCompany('all')">All</button>
+    
+    <button class="filter-btn" onclick="filterCompany('BNY Mellon')">BNY Mellon</button>
+    
+    <button class="filter-btn" onclick="filterCompany('Barclays')">Barclays</button>
+    
+    <button class="filter-btn" onclick="filterCompany('UBS')">UBS</button>
+    
+    <span class="sep"></span>
+    <button class="filter-btn" onclick="filterCheck('creche')">Creche Confirmed</button>
+    <button class="filter-btn" onclick="filterCheck('shift')">6:30 PM Confirmed</button>
+    <button class="filter-btn" onclick="filterCheck('all-green')">All Green</button>
+  </div>
+
+  <div class="table-wrap">
+    <table id="roles-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Role</th>
+          <th>Company</th>
+          <th>Level</th>
+          <th>Function</th>
+          <th>Posted</th>
+          <th>Creche?</th>
+          <th>Pune?</th>
+          <th>By 6:30?</th>
+          <th>WFH</th>
+          <th>Interview Mastery</th>
+          <th>Apply</th>
+        </tr>
+      </thead>
+      <tbody>
+        
+        <tr data-company="BNY Mellon" data-creche="verify" data-shift="yes" data-pune="yes"
+            class="company-bny">
+          <td style="color:var(--text-dim)">1</td>
+          <td style="max-width:260px">
+            <div style="font-weight:600;font-size:12px">Senior Associate, Treasury and ALM</div>
+          </td>
+          <td style="white-space:nowrap">BNY Mellon</td>
+          <td><span class="seniority-badge">senior associate</span></td>
+          <td><span class="func-tag">alm</span></td>
+          <td><span class="date-text">2026-03-12</span></td>
+          <td>
+            <span class="pill verify">
+              &#9888; Verify
+            </span>
+            <div class="note">Needs verification with HR</div>
+          </td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+          </td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+            <div class="note">India-hours role (treasury/ALM)</div>
+          </td>
+          <td>
+            <span class="pill hybrid">Hybrid</span>
+            <div class="note">4 days WFO</div>
+          </td>
+          <td>
+            <div class="mastery-text">Asset-liability management, interest rate risk, liquidity risk (LCR/NSFR), funds transfer pricing, gap analysis, duration management, ALM policy frameworks, Basel III liquidity</div>
+          </td>
+          <td>
+            
+            <a href="https://eofe.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1001/requisitions" class="apply-link" target="_blank">Apply &rarr;</a>
+            
+          </td>
+        </tr>
+        
+        <tr data-company="Barclays" data-creche="yes" data-shift="yes" data-pune="yes"
+            class="company-barclays">
+          <td style="color:var(--text-dim)">2</td>
+          <td style="max-width:260px">
+            <div style="font-weight:600;font-size:12px">Employee Compliance - Regulatory Authorizations and Permissions (AVP)</div>
+          </td>
+          <td style="white-space:nowrap">Barclays</td>
+          <td><span class="seniority-badge">avp</span></td>
+          <td><span class="func-tag">compliance</span></td>
+          <td><span class="date-text">2026-03-12</span></td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+            <div class="note">Ipsaa captive creche on Pune campus - confirmed</div>
+          </td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+          </td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+            <div class="note">India-hours role (compliance/controls/governance)</div>
+          </td>
+          <td>
+            <span class="pill hybrid">Hybrid</span>
+            <div class="note">2-3 days WFO</div>
+          </td>
+          <td>
+            <div class="mastery-text">Regulatory frameworks (FCA, RBI, MiFID II), compliance monitoring &amp; testing, policy lifecycle, regulatory change management, compliance risk assessment, breach management</div>
+          </td>
+          <td>
+            
+            <a href="https://search.jobs.barclays/job/pune/employee-compliance-regulatory-authorizations-and-permissions/13015/92640160912" class="apply-link" target="_blank">Apply &rarr;</a>
+            
+          </td>
+        </tr>
+        
+        <tr data-company="Barclays" data-creche="yes" data-shift="yes" data-pune="yes"
+            class="company-barclays">
+          <td style="color:var(--text-dim)">3</td>
+          <td style="max-width:260px">
+            <div style="font-weight:600;font-size:12px">VP - Regulatory Authorization and Permissions</div>
+          </td>
+          <td style="white-space:nowrap">Barclays</td>
+          <td><span class="seniority-badge">vp</span></td>
+          <td><span class="func-tag">compliance</span></td>
+          <td><span class="date-text">2026-03-12</span></td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+            <div class="note">Ipsaa captive creche on Pune campus - confirmed</div>
+          </td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+          </td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+            <div class="note">India-hours role (compliance/controls/governance)</div>
+          </td>
+          <td>
+            <span class="pill hybrid">Hybrid</span>
+            <div class="note">2-3 days WFO</div>
+          </td>
+          <td>
+            <div class="mastery-text">Regulatory frameworks (FCA, RBI, MiFID II), compliance monitoring &amp; testing, policy lifecycle, regulatory change management, compliance risk assessment, breach management</div>
+          </td>
+          <td>
+            
+            <a href="https://search.jobs.barclays/job/pune/vp-regulatory-authorization-and-permissions/13015/91903378128" class="apply-link" target="_blank">Apply &rarr;</a>
+            
+          </td>
+        </tr>
+        
+        <tr data-company="Barclays" data-creche="yes" data-shift="yes" data-pune="yes"
+            class="company-barclays">
+          <td style="color:var(--text-dim)">4</td>
+          <td style="max-width:260px">
+            <div style="font-weight:600;font-size:12px">Vice President Fin Crime Screening</div>
+          </td>
+          <td style="white-space:nowrap">Barclays</td>
+          <td><span class="seniority-badge">vp</span></td>
+          <td><span class="func-tag">financial crime</span></td>
+          <td><span class="date-text">2026-03-12</span></td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+            <div class="note">Ipsaa captive creche on Pune campus - confirmed</div>
+          </td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+          </td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+            <div class="note">India-hours role (compliance/controls/governance)</div>
+          </td>
+          <td>
+            <span class="pill hybrid">Hybrid</span>
+            <div class="note">2-3 days WFO</div>
+          </td>
+          <td>
+            <div class="mastery-text">AML/CFT frameworks, transaction monitoring (Actimize/Mantas), STR/SAR filing, sanctions screening, fraud typologies, FATF recommendations, risk-based approach</div>
+          </td>
+          <td>
+            
+            <a href="https://search.jobs.barclays/job/pune/vice-president-fin-crime-screening/13015/90656377808" class="apply-link" target="_blank">Apply &rarr;</a>
+            
+          </td>
+        </tr>
+        
+        <tr data-company="Barclays" data-creche="yes" data-shift="yes" data-pune="yes"
+            class="company-barclays">
+          <td style="color:var(--text-dim)">5</td>
+          <td style="max-width:260px">
+            <div style="font-weight:600;font-size:12px">Know Your Customer Advisory Specialist (AVP)</div>
+          </td>
+          <td style="white-space:nowrap">Barclays</td>
+          <td><span class="seniority-badge">avp</span></td>
+          <td><span class="func-tag">kyc</span></td>
+          <td><span class="date-text">2026-03-12</span></td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+            <div class="note">Ipsaa captive creche on Pune campus - confirmed</div>
+          </td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+          </td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+            <div class="note">India-hours role (compliance/controls/governance)</div>
+          </td>
+          <td>
+            <span class="pill hybrid">Hybrid</span>
+            <div class="note">2-3 days WFO</div>
+          </td>
+          <td>
+            <div class="mastery-text">CDD/EDD procedures, KYC lifecycle, AML regulations (PMLA, EU AMLD), PEP screening, sanctions lists (OFAC/OFSI/UN), risk rating models, remediation workflows</div>
+          </td>
+          <td>
+            
+            <a href="https://search.jobs.barclays/job/pune/know-your-customer-advisory-specialist/13015/92601742000" class="apply-link" target="_blank">Apply &rarr;</a>
+            
+          </td>
+        </tr>
+        
+        <tr data-company="Barclays" data-creche="yes" data-shift="yes" data-pune="yes"
+            class="company-barclays">
+          <td style="color:var(--text-dim)">6</td>
+          <td style="max-width:260px">
+            <div style="font-weight:600;font-size:12px">Sanctions Specialist (AVP)</div>
+          </td>
+          <td style="white-space:nowrap">Barclays</td>
+          <td><span class="seniority-badge">avp</span></td>
+          <td><span class="func-tag">sanctions</span></td>
+          <td><span class="date-text">2026-03-12</span></td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+            <div class="note">Ipsaa captive creche on Pune campus - confirmed</div>
+          </td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+          </td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+            <div class="note">India-hours role (compliance/controls/governance)</div>
+          </td>
+          <td>
+            <span class="pill hybrid">Hybrid</span>
+            <div class="note">2-3 days WFO</div>
+          </td>
+          <td>
+            <div class="mastery-text">OFAC/OFSI/EU/UN sanctions regimes, sanctions screening tools, payment screening (SWIFT), list management, true match vs false positive analysis, sanctions risk assessment</div>
+          </td>
+          <td>
+            
+            <a href="https://search.jobs.barclays/job/pune/sanctions-specialist/13015/92346159040" class="apply-link" target="_blank">Apply &rarr;</a>
+            
+          </td>
+        </tr>
+        
+        <tr data-company="Barclays" data-creche="yes" data-shift="yes" data-pune="yes"
+            class="company-barclays">
+          <td style="color:var(--text-dim)">7</td>
+          <td style="max-width:260px">
+            <div style="font-weight:600;font-size:12px">KYC QCC Manager</div>
+          </td>
+          <td style="white-space:nowrap">Barclays</td>
+          <td><span class="seniority-badge">manager</span></td>
+          <td><span class="func-tag">kyc</span></td>
+          <td><span class="date-text">2026-03-12</span></td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+            <div class="note">Ipsaa captive creche on Pune campus - confirmed</div>
+          </td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+          </td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+            <div class="note">India-hours role (compliance/controls/governance)</div>
+          </td>
+          <td>
+            <span class="pill hybrid">Hybrid</span>
+            <div class="note">2-3 days WFO</div>
+          </td>
+          <td>
+            <div class="mastery-text">CDD/EDD procedures, KYC lifecycle, AML regulations (PMLA, EU AMLD), PEP screening, sanctions lists (OFAC/OFSI/UN), risk rating models, remediation workflows</div>
+          </td>
+          <td>
+            
+            <a href="https://search.jobs.barclays/job/pune/kyc-qcc-manager/13015/91294086544" class="apply-link" target="_blank">Apply &rarr;</a>
+            
+          </td>
+        </tr>
+        
+        <tr data-company="Barclays" data-creche="yes" data-shift="yes" data-pune="yes"
+            class="company-barclays">
+          <td style="color:var(--text-dim)">8</td>
+          <td style="max-width:260px">
+            <div style="font-weight:600;font-size:12px">FinCrime Risk &amp; Controls Lead (VP)</div>
+          </td>
+          <td style="white-space:nowrap">Barclays</td>
+          <td><span class="seniority-badge">vp</span></td>
+          <td><span class="func-tag">financial crime</span></td>
+          <td><span class="date-text">2026-03-12</span></td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+            <div class="note">Ipsaa captive creche on Pune campus - confirmed</div>
+          </td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+          </td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+            <div class="note">India-hours role (compliance/controls/governance)</div>
+          </td>
+          <td>
+            <span class="pill hybrid">Hybrid</span>
+            <div class="note">2-3 days WFO</div>
+          </td>
+          <td>
+            <div class="mastery-text">AML/CFT frameworks, transaction monitoring (Actimize/Mantas), STR/SAR filing, sanctions screening, fraud typologies, FATF recommendations, risk-based approach</div>
+          </td>
+          <td>
+            
+            <a href="https://search.jobs.barclays/job/pune/fincrime-risk-and-controls-lead/13015/87826216064" class="apply-link" target="_blank">Apply &rarr;</a>
+            
+          </td>
+        </tr>
+        
+        <tr data-company="Barclays" data-creche="yes" data-shift="yes" data-pune="yes"
+            class="company-barclays">
+          <td style="color:var(--text-dim)">9</td>
+          <td style="max-width:260px">
+            <div style="font-weight:600;font-size:12px">Senior Business Analyst - Financial Crime (AVP)</div>
+          </td>
+          <td style="white-space:nowrap">Barclays</td>
+          <td><span class="seniority-badge">avp</span></td>
+          <td><span class="func-tag">financial crime</span></td>
+          <td><span class="date-text">2026-03-12</span></td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+            <div class="note">Ipsaa captive creche on Pune campus - confirmed</div>
+          </td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+          </td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+            <div class="note">India-hours role (compliance/controls/governance)</div>
+          </td>
+          <td>
+            <span class="pill hybrid">Hybrid</span>
+            <div class="note">2-3 days WFO</div>
+          </td>
+          <td>
+            <div class="mastery-text">AML/CFT frameworks, transaction monitoring (Actimize/Mantas), STR/SAR filing, sanctions screening, fraud typologies, FATF recommendations, risk-based approach</div>
+          </td>
+          <td>
+            
+            <a href="https://search.jobs.barclays/job/pune/senior-business-analyst/13015/91294084160" class="apply-link" target="_blank">Apply &rarr;</a>
+            
+          </td>
+        </tr>
+        
+        <tr data-company="Barclays" data-creche="yes" data-shift="yes" data-pune="yes"
+            class="company-barclays">
+          <td style="color:var(--text-dim)">10</td>
+          <td style="max-width:260px">
+            <div style="font-weight:600;font-size:12px">IFC - Business Analyst (AVP)</div>
+          </td>
+          <td style="white-space:nowrap">Barclays</td>
+          <td><span class="seniority-badge">avp</span></td>
+          <td><span class="func-tag">financial crime</span></td>
+          <td><span class="date-text">2026-03-12</span></td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+            <div class="note">Ipsaa captive creche on Pune campus - confirmed</div>
+          </td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+          </td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+            <div class="note">India-hours role (compliance/controls/governance)</div>
+          </td>
+          <td>
+            <span class="pill hybrid">Hybrid</span>
+            <div class="note">2-3 days WFO</div>
+          </td>
+          <td>
+            <div class="mastery-text">AML/CFT frameworks, transaction monitoring (Actimize/Mantas), STR/SAR filing, sanctions screening, fraud typologies, FATF recommendations, risk-based approach</div>
+          </td>
+          <td>
+            
+            <a href="https://search.jobs.barclays/job/pune/ifc-business-analyst/13015/89825242608" class="apply-link" target="_blank">Apply &rarr;</a>
+            
+          </td>
+        </tr>
+        
+        <tr data-company="Barclays" data-creche="yes" data-shift="verify" data-pune="yes"
+            class="company-barclays">
+          <td style="color:var(--text-dim)">11</td>
+          <td style="max-width:260px">
+            <div style="font-weight:600;font-size:12px">Cyber Risk and Control Lead - Vice President</div>
+          </td>
+          <td style="white-space:nowrap">Barclays</td>
+          <td><span class="seniority-badge">vp</span></td>
+          <td><span class="func-tag">risk</span></td>
+          <td><span class="date-text">2026-03-12</span></td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+            <div class="note">Ipsaa captive creche on Pune campus - confirmed</div>
+          </td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+          </td>
+          <td>
+            <span class="pill verify">
+              &#9888; Verify
+            </span>
+            <div class="note">May have on-call or overlap with UK/US - verify</div>
+          </td>
+          <td>
+            <span class="pill hybrid">Hybrid</span>
+            <div class="note">2-3 days WFO</div>
+          </td>
+          <td>
+            <div class="mastery-text">Operational risk framework (Basel III), RCSA methodology, risk event management, KRI monitoring, risk appetite statements, three lines of defense model, stress testing</div>
+          </td>
+          <td>
+            
+            <a href="https://search.jobs.barclays/job/pune/cyber-risk-and-control-lead-vice-president/13015/92640161872" class="apply-link" target="_blank">Apply &rarr;</a>
+            
+          </td>
+        </tr>
+        
+        <tr data-company="Barclays" data-creche="yes" data-shift="yes" data-pune="yes"
+            class="company-barclays">
+          <td style="color:var(--text-dim)">12</td>
+          <td style="max-width:260px">
+            <div style="font-weight:600;font-size:12px">Technology Risk and Controls Lead (AVP)</div>
+          </td>
+          <td style="white-space:nowrap">Barclays</td>
+          <td><span class="seniority-badge">avp</span></td>
+          <td><span class="func-tag">controls</span></td>
+          <td><span class="date-text">2026-03-12</span></td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+            <div class="note">Ipsaa captive creche on Pune campus - confirmed</div>
+          </td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+          </td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+            <div class="note">India-hours role (compliance/controls/governance)</div>
+          </td>
+          <td>
+            <span class="pill hybrid">Hybrid</span>
+            <div class="note">2-3 days WFO</div>
+          </td>
+          <td>
+            <div class="mastery-text">Internal controls framework (COSO), control testing &amp; assurance, SOX compliance, control gap remediation, Barclays Controls Framework, risk &amp; control self-assessment</div>
+          </td>
+          <td>
+            
+            <a href="https://search.jobs.barclays/job/pune/technology-risk-and-controls-lead/13015/92321776048" class="apply-link" target="_blank">Apply &rarr;</a>
+            
+          </td>
+        </tr>
+        
+        <tr data-company="Barclays" data-creche="yes" data-shift="yes" data-pune="yes"
+            class="company-barclays">
+          <td style="color:var(--text-dim)">13</td>
+          <td style="max-width:260px">
+            <div style="font-weight:600;font-size:12px">Risk and Control Analyst (AVP)</div>
+          </td>
+          <td style="white-space:nowrap">Barclays</td>
+          <td><span class="seniority-badge">avp</span></td>
+          <td><span class="func-tag">risk</span></td>
+          <td><span class="date-text">2026-03-12</span></td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+            <div class="note">Ipsaa captive creche on Pune campus - confirmed</div>
+          </td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+          </td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+            <div class="note">India-hours role (risk function)</div>
+          </td>
+          <td>
+            <span class="pill hybrid">Hybrid</span>
+            <div class="note">2-3 days WFO</div>
+          </td>
+          <td>
+            <div class="mastery-text">Operational risk framework (Basel III), RCSA methodology, risk event management, KRI monitoring, risk appetite statements, three lines of defense model, stress testing</div>
+          </td>
+          <td>
+            
+            <a href="https://search.jobs.barclays/job/pune/risk-and-control-analyst/13015/90549979568" class="apply-link" target="_blank">Apply &rarr;</a>
+            
+          </td>
+        </tr>
+        
+        <tr data-company="Barclays" data-creche="yes" data-shift="yes" data-pune="yes"
+            class="company-barclays">
+          <td style="color:var(--text-dim)">14</td>
+          <td style="max-width:260px">
+            <div style="font-weight:600;font-size:12px">PBWM Controls Offshore CoE</div>
+          </td>
+          <td style="white-space:nowrap">Barclays</td>
+          <td><span class="seniority-badge">avp</span></td>
+          <td><span class="func-tag">controls</span></td>
+          <td><span class="date-text">2026-03-12</span></td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+            <div class="note">Ipsaa captive creche on Pune campus - confirmed</div>
+          </td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+          </td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+            <div class="note">India-hours role (compliance/controls/governance)</div>
+          </td>
+          <td>
+            <span class="pill hybrid">Hybrid</span>
+            <div class="note">2-3 days WFO</div>
+          </td>
+          <td>
+            <div class="mastery-text">Internal controls framework (COSO), control testing &amp; assurance, SOX compliance, control gap remediation, Barclays Controls Framework, risk &amp; control self-assessment</div>
+          </td>
+          <td>
+            
+            <a href="https://search.jobs.barclays/job/pune/pbwm-controls-offshore-coe/13015/88149339488" class="apply-link" target="_blank">Apply &rarr;</a>
+            
+          </td>
+        </tr>
+        
+        <tr data-company="Barclays" data-creche="yes" data-shift="verify" data-pune="yes"
+            class="company-barclays">
+          <td style="color:var(--text-dim)">15</td>
+          <td style="max-width:260px">
+            <div style="font-weight:600;font-size:12px">AVP - Cyber Security Risk Reporting</div>
+          </td>
+          <td style="white-space:nowrap">Barclays</td>
+          <td><span class="seniority-badge">avp</span></td>
+          <td><span class="func-tag">risk</span></td>
+          <td><span class="date-text">2026-03-12</span></td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+            <div class="note">Ipsaa captive creche on Pune campus - confirmed</div>
+          </td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+          </td>
+          <td>
+            <span class="pill verify">
+              &#9888; Verify
+            </span>
+            <div class="note">May have on-call or overlap with UK/US - verify</div>
+          </td>
+          <td>
+            <span class="pill hybrid">Hybrid</span>
+            <div class="note">2-3 days WFO</div>
+          </td>
+          <td>
+            <div class="mastery-text">Operational risk framework (Basel III), RCSA methodology, risk event management, KRI monitoring, risk appetite statements, three lines of defense model, stress testing</div>
+          </td>
+          <td>
+            
+            <a href="https://search.jobs.barclays/job/pune/avp-cyber-security-risk-reporting/13015/89194097536" class="apply-link" target="_blank">Apply &rarr;</a>
+            
+          </td>
+        </tr>
+        
+        <tr data-company="Barclays" data-creche="yes" data-shift="yes" data-pune="yes"
+            class="company-barclays">
+          <td style="color:var(--text-dim)">16</td>
+          <td style="max-width:260px">
+            <div style="font-weight:600;font-size:12px">Platform Governance Lead (AVP)</div>
+          </td>
+          <td style="white-space:nowrap">Barclays</td>
+          <td><span class="seniority-badge">avp</span></td>
+          <td><span class="func-tag">governance</span></td>
+          <td><span class="date-text">2026-03-12</span></td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+            <div class="note">Ipsaa captive creche on Pune campus - confirmed</div>
+          </td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+          </td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+            <div class="note">India-hours role (compliance/controls/governance)</div>
+          </td>
+          <td>
+            <span class="pill hybrid">Hybrid</span>
+            <div class="note">2-3 days WFO</div>
+          </td>
+          <td>
+            <div class="mastery-text">Governance framework design, policy management lifecycle, committee/forum management, regulatory reporting, enterprise risk governance, board reporting</div>
+          </td>
+          <td>
+            
+            <a href="https://search.jobs.barclays/job/pune/platform-governance-lead/13015/90783675440" class="apply-link" target="_blank">Apply &rarr;</a>
+            
+          </td>
+        </tr>
+        
+        <tr data-company="Barclays" data-creche="yes" data-shift="yes" data-pune="yes"
+            class="company-barclays">
+          <td style="color:var(--text-dim)">17</td>
+          <td style="max-width:260px">
+            <div style="font-weight:600;font-size:12px">Data Governance Analyst (AVP)</div>
+          </td>
+          <td style="white-space:nowrap">Barclays</td>
+          <td><span class="seniority-badge">avp</span></td>
+          <td><span class="func-tag">data governance</span></td>
+          <td><span class="date-text">2026-03-12</span></td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+            <div class="note">Ipsaa captive creche on Pune campus - confirmed</div>
+          </td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+          </td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+            <div class="note">India-hours role (compliance/controls/governance)</div>
+          </td>
+          <td>
+            <span class="pill hybrid">Hybrid</span>
+            <div class="note">2-3 days WFO</div>
+          </td>
+          <td>
+            <div class="mastery-text">Data quality frameworks, data lineage &amp; cataloging, metadata management, DPDP Act/GDPR, records retention policies, data classification, master data management</div>
+          </td>
+          <td>
+            
+            <a href="https://search.jobs.barclays/job/pune/data-governance-analyst/13015/90405985856" class="apply-link" target="_blank">Apply &rarr;</a>
+            
+          </td>
+        </tr>
+        
+        <tr data-company="Barclays" data-creche="yes" data-shift="yes" data-pune="yes"
+            class="company-barclays">
+          <td style="color:var(--text-dim)">18</td>
+          <td style="max-width:260px">
+            <div style="font-weight:600;font-size:12px">Data &amp; Records Governance Analyst</div>
+          </td>
+          <td style="white-space:nowrap">Barclays</td>
+          <td><span class="seniority-badge">analyst</span></td>
+          <td><span class="func-tag">data governance</span></td>
+          <td><span class="date-text">2026-03-12</span></td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+            <div class="note">Ipsaa captive creche on Pune campus - confirmed</div>
+          </td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+          </td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+            <div class="note">India-hours role (compliance/controls/governance)</div>
+          </td>
+          <td>
+            <span class="pill hybrid">Hybrid</span>
+            <div class="note">2-3 days WFO</div>
+          </td>
+          <td>
+            <div class="mastery-text">Data quality frameworks, data lineage &amp; cataloging, metadata management, DPDP Act/GDPR, records retention policies, data classification, master data management</div>
+          </td>
+          <td>
+            
+            <a href="https://search.jobs.barclays/job/pune/data-and-records-governance-analyst/13015/91658602240" class="apply-link" target="_blank">Apply &rarr;</a>
+            
+          </td>
+        </tr>
+        
+        <tr data-company="Barclays" data-creche="yes" data-shift="yes" data-pune="yes"
+            class="company-barclays">
+          <td style="color:var(--text-dim)">19</td>
+          <td style="max-width:260px">
+            <div style="font-weight:600;font-size:12px">Records Management - AVP</div>
+          </td>
+          <td style="white-space:nowrap">Barclays</td>
+          <td><span class="seniority-badge">avp</span></td>
+          <td><span class="func-tag">records management</span></td>
+          <td><span class="date-text">2026-03-12</span></td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+            <div class="note">Ipsaa captive creche on Pune campus - confirmed</div>
+          </td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+          </td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+            <div class="note">India-hours role (compliance/controls/governance)</div>
+          </td>
+          <td>
+            <span class="pill hybrid">Hybrid</span>
+            <div class="note">2-3 days WFO</div>
+          </td>
+          <td>
+            <div class="mastery-text">Records lifecycle management, retention schedules, regulatory recordkeeping requirements, eDiscovery, information governance, disposal &amp; archival policies</div>
+          </td>
+          <td>
+            
+            <a href="https://search.jobs.barclays/job/pune/records-management-avp/13015/92563165936" class="apply-link" target="_blank">Apply &rarr;</a>
+            
+          </td>
+        </tr>
+        
+        <tr data-company="Barclays" data-creche="yes" data-shift="yes" data-pune="yes"
+            class="company-barclays">
+          <td style="color:var(--text-dim)">20</td>
+          <td style="max-width:260px">
+            <div style="font-weight:600;font-size:12px">Records Lead - VP</div>
+          </td>
+          <td style="white-space:nowrap">Barclays</td>
+          <td><span class="seniority-badge">vp</span></td>
+          <td><span class="func-tag">records management</span></td>
+          <td><span class="date-text">2026-03-12</span></td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+            <div class="note">Ipsaa captive creche on Pune campus - confirmed</div>
+          </td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+          </td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+            <div class="note">India-hours role (compliance/controls/governance)</div>
+          </td>
+          <td>
+            <span class="pill hybrid">Hybrid</span>
+            <div class="note">2-3 days WFO</div>
+          </td>
+          <td>
+            <div class="mastery-text">Records lifecycle management, retention schedules, regulatory recordkeeping requirements, eDiscovery, information governance, disposal &amp; archival policies</div>
+          </td>
+          <td>
+            
+            <a href="https://search.jobs.barclays/job/pune/records-lead-vp/13015/92563165760" class="apply-link" target="_blank">Apply &rarr;</a>
+            
+          </td>
+        </tr>
+        
+        <tr data-company="Barclays" data-creche="yes" data-shift="yes" data-pune="yes"
+            class="company-barclays">
+          <td style="color:var(--text-dim)">21</td>
+          <td style="max-width:260px">
+            <div style="font-weight:600;font-size:12px">Data Privacy Officer (AVP)</div>
+          </td>
+          <td style="white-space:nowrap">Barclays</td>
+          <td><span class="seniority-badge">avp</span></td>
+          <td><span class="func-tag">compliance</span></td>
+          <td><span class="date-text">2026-03-12</span></td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+            <div class="note">Ipsaa captive creche on Pune campus - confirmed</div>
+          </td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+          </td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+            <div class="note">India-hours role (compliance/controls/governance)</div>
+          </td>
+          <td>
+            <span class="pill hybrid">Hybrid</span>
+            <div class="note">2-3 days WFO</div>
+          </td>
+          <td>
+            <div class="mastery-text">Regulatory frameworks (FCA, RBI, MiFID II), compliance monitoring &amp; testing, policy lifecycle, regulatory change management, compliance risk assessment, breach management</div>
+          </td>
+          <td>
+            
+            <a href="https://search.jobs.barclays/job/pune/data-privacy-officer/13015/92640171040" class="apply-link" target="_blank">Apply &rarr;</a>
+            
+          </td>
+        </tr>
+        
+        <tr data-company="Barclays" data-creche="yes" data-shift="yes" data-pune="yes"
+            class="company-barclays">
+          <td style="color:var(--text-dim)">22</td>
+          <td style="max-width:260px">
+            <div style="font-weight:600;font-size:12px">Assurance AVP</div>
+          </td>
+          <td style="white-space:nowrap">Barclays</td>
+          <td><span class="seniority-badge">avp</span></td>
+          <td><span class="func-tag">assurance</span></td>
+          <td><span class="date-text">2026-03-12</span></td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+            <div class="note">Ipsaa captive creche on Pune campus - confirmed</div>
+          </td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+          </td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+            <div class="note">India-hours role (compliance/controls/governance)</div>
+          </td>
+          <td>
+            <span class="pill hybrid">Hybrid</span>
+            <div class="note">2-3 days WFO</div>
+          </td>
+          <td>
+            <div class="mastery-text">Control assurance methodology, risk-based testing, findings documentation, issue management, regulatory compliance monitoring, AML/sanctions control testing</div>
+          </td>
+          <td>
+            
+            <a href="https://search.jobs.barclays/job/pune/assurance-avp/13015/91154738944" class="apply-link" target="_blank">Apply &rarr;</a>
+            
+          </td>
+        </tr>
+        
+        <tr data-company="Barclays" data-creche="yes" data-shift="yes" data-pune="yes"
+            class="company-barclays">
+          <td style="color:var(--text-dim)">23</td>
+          <td style="max-width:260px">
+            <div style="font-weight:600;font-size:12px">Internal Audit Quality Assurance - VP</div>
+          </td>
+          <td style="white-space:nowrap">Barclays</td>
+          <td><span class="seniority-badge">vp</span></td>
+          <td><span class="func-tag">audit</span></td>
+          <td><span class="date-text">2026-03-12</span></td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+            <div class="note">Ipsaa captive creche on Pune campus - confirmed</div>
+          </td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+          </td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+            <div class="note">India-hours role (compliance/controls/governance)</div>
+          </td>
+          <td>
+            <span class="pill hybrid">Hybrid</span>
+            <div class="note">2-3 days WFO</div>
+          </td>
+          <td>
+            <div class="mastery-text">Risk-based audit methodology, IIA standards, audit planning &amp; scoping, control testing, issue tracking &amp; remediation, SOX audit, regulatory exam prep</div>
+          </td>
+          <td>
+            
+            <a href="https://search.jobs.barclays/job/pune/internal-audit-quality-assurance-vp/13015/90645655824" class="apply-link" target="_blank">Apply &rarr;</a>
+            
+          </td>
+        </tr>
+        
+        <tr data-company="Barclays" data-creche="yes" data-shift="verify" data-pune="yes"
+            class="company-barclays">
+          <td style="color:var(--text-dim)">24</td>
+          <td style="max-width:260px">
+            <div style="font-weight:600;font-size:12px">Service Resilience Analyst</div>
+          </td>
+          <td style="white-space:nowrap">Barclays</td>
+          <td><span class="seniority-badge">analyst</span></td>
+          <td><span class="func-tag">operational resilience</span></td>
+          <td><span class="date-text">2026-03-12</span></td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+            <div class="note">Ipsaa captive creche on Pune campus - confirmed</div>
+          </td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+          </td>
+          <td>
+            <span class="pill verify">
+              &#9888; Verify
+            </span>
+            <div class="note">May have on-call or overlap with UK/US - verify</div>
+          </td>
+          <td>
+            <span class="pill hybrid">Hybrid</span>
+            <div class="note">2-3 days WFO</div>
+          </td>
+          <td>
+            <div class="mastery-text">Business continuity planning (BCP), disaster recovery, impact tolerance, third-party risk, crisis management, regulatory expectations (FCA/PRA operational resilience)</div>
+          </td>
+          <td>
+            
+            <a href="https://search.jobs.barclays/job/pune/service-resilience-analyst/13015/92420761616" class="apply-link" target="_blank">Apply &rarr;</a>
+            
+          </td>
+        </tr>
+        
+        <tr data-company="Barclays" data-creche="yes" data-shift="yes" data-pune="yes"
+            class="company-barclays">
+          <td style="color:var(--text-dim)">25</td>
+          <td style="max-width:260px">
+            <div style="font-weight:600;font-size:12px">AVP - Ops Transformation</div>
+          </td>
+          <td style="white-space:nowrap">Barclays</td>
+          <td><span class="seniority-badge">avp</span></td>
+          <td><span class="func-tag">operations transformation</span></td>
+          <td><span class="date-text">2026-03-12</span></td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+            <div class="note">Ipsaa captive creche on Pune campus - confirmed</div>
+          </td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+          </td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+            <div class="note">India-hours role (compliance/controls/governance)</div>
+          </td>
+          <td>
+            <span class="pill hybrid">Hybrid</span>
+            <div class="note">2-3 days WFO</div>
+          </td>
+          <td>
+            <div class="mastery-text">Lean Six Sigma, process re-engineering, automation (RPA/intelligent automation), capacity planning, operational KPIs, change management, Agile delivery</div>
+          </td>
+          <td>
+            
+            <a href="https://search.jobs.barclays/job/pune/avp-ops-transformation/13015/79048666048" class="apply-link" target="_blank">Apply &rarr;</a>
+            
+          </td>
+        </tr>
+        
+        <tr data-company="Barclays" data-creche="yes" data-shift="yes" data-pune="yes"
+            class="company-barclays">
+          <td style="color:var(--text-dim)">26</td>
+          <td style="max-width:260px">
+            <div style="font-weight:600;font-size:12px">Consumer Credit Risk - Impact Director</div>
+          </td>
+          <td style="white-space:nowrap">Barclays</td>
+          <td><span class="seniority-badge">director</span></td>
+          <td><span class="func-tag">risk</span></td>
+          <td><span class="date-text">2026-03-12</span></td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+            <div class="note">Ipsaa captive creche on Pune campus - confirmed</div>
+          </td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+          </td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+            <div class="note">India-hours role (risk function)</div>
+          </td>
+          <td>
+            <span class="pill hybrid">Hybrid</span>
+            <div class="note">2-3 days WFO</div>
+          </td>
+          <td>
+            <div class="mastery-text">Operational risk framework (Basel III), RCSA methodology, risk event management, KRI monitoring, risk appetite statements, three lines of defense model, stress testing</div>
+          </td>
+          <td>
+            
+            <a href="https://search.jobs.barclays/job/pune/consumer-credit-risk-impact-director/13015/92613186864" class="apply-link" target="_blank">Apply &rarr;</a>
+            
+          </td>
+        </tr>
+        
+        <tr data-company="UBS" data-creche="verify" data-shift="yes" data-pune="yes"
+            class="company-ubs">
+          <td style="color:var(--text-dim)">27</td>
+          <td style="max-width:260px">
+            <div style="font-weight:600;font-size:12px">AML Transaction Monitoring Specialist</div>
+          </td>
+          <td style="white-space:nowrap">UBS</td>
+          <td><span class="seniority-badge">avp</span></td>
+          <td><span class="func-tag">aml</span></td>
+          <td><span class="date-text">2026-03-12</span></td>
+          <td>
+            <span class="pill verify">
+              &#9888; Verify
+            </span>
+            <div class="note">Needs verification with HR</div>
+          </td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+          </td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+            <div class="note">India-hours role (compliance/controls/governance)</div>
+          </td>
+          <td>
+            <span class="pill hybrid">Hybrid</span>
+            <div class="note">3 days WFO</div>
+          </td>
+          <td>
+            <div class="mastery-text">AML/CFT frameworks, transaction monitoring systems, SAR/STR filing, CDD/EDD, PMLA/FATF, typology-based detection, investigation techniques, Actimize/NICE</div>
+          </td>
+          <td>
+            
+            <a href="https://jobs.ubs.com/TGnewUI/Search/home/HomeWithPreLoad?partnerid=25008&amp;siteid=5012&amp;PageType=JobDetails&amp;jobid=330546" class="apply-link" target="_blank">Apply &rarr;</a>
+            
+          </td>
+        </tr>
+        
+        <tr data-company="UBS" data-creche="verify" data-shift="yes" data-pune="yes"
+            class="company-ubs">
+          <td style="color:var(--text-dim)">28</td>
+          <td style="max-width:260px">
+            <div style="font-weight:600;font-size:12px">Process and Quality (AML/KYC) Specialist</div>
+          </td>
+          <td style="white-space:nowrap">UBS</td>
+          <td><span class="seniority-badge">avp</span></td>
+          <td><span class="func-tag">kyc</span></td>
+          <td><span class="date-text">2026-03-12</span></td>
+          <td>
+            <span class="pill verify">
+              &#9888; Verify
+            </span>
+            <div class="note">Needs verification with HR</div>
+          </td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+          </td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+            <div class="note">India-hours role (compliance/controls/governance)</div>
+          </td>
+          <td>
+            <span class="pill hybrid">Hybrid</span>
+            <div class="note">3 days WFO</div>
+          </td>
+          <td>
+            <div class="mastery-text">CDD/EDD procedures, KYC lifecycle, AML regulations (PMLA, EU AMLD), PEP screening, sanctions lists (OFAC/OFSI/UN), risk rating models, remediation workflows</div>
+          </td>
+          <td>
+            
+            <a href="https://jobs.ubs.com/TGnewUI/Search/home/HomeWithPreLoad?partnerid=25008&amp;siteid=5012&amp;PageType=JobDetails&amp;jobid=335715" class="apply-link" target="_blank">Apply &rarr;</a>
+            
+          </td>
+        </tr>
+        
+        <tr data-company="UBS" data-creche="verify" data-shift="yes" data-pune="yes"
+            class="company-ubs">
+          <td style="color:var(--text-dim)">29</td>
+          <td style="max-width:260px">
+            <div style="font-weight:600;font-size:12px">KYC Review Specialist</div>
+          </td>
+          <td style="white-space:nowrap">UBS</td>
+          <td><span class="seniority-badge">avp</span></td>
+          <td><span class="func-tag">kyc</span></td>
+          <td><span class="date-text">2026-03-12</span></td>
+          <td>
+            <span class="pill verify">
+              &#9888; Verify
+            </span>
+            <div class="note">Needs verification with HR</div>
+          </td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+          </td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+            <div class="note">India-hours role (compliance/controls/governance)</div>
+          </td>
+          <td>
+            <span class="pill hybrid">Hybrid</span>
+            <div class="note">3 days WFO</div>
+          </td>
+          <td>
+            <div class="mastery-text">CDD/EDD procedures, KYC lifecycle, AML regulations (PMLA, EU AMLD), PEP screening, sanctions lists (OFAC/OFSI/UN), risk rating models, remediation workflows</div>
+          </td>
+          <td>
+            
+            <a href="https://jobs.ubs.com/TGnewUI/Search/home/HomeWithPreLoad?partnerid=25008&amp;siteid=5012&amp;PageType=JobDetails&amp;jobid=318570" class="apply-link" target="_blank">Apply &rarr;</a>
+            
+          </td>
+        </tr>
+        
+        <tr data-company="UBS" data-creche="verify" data-shift="yes" data-pune="yes"
+            class="company-ubs">
+          <td style="color:var(--text-dim)">30</td>
+          <td style="max-width:260px">
+            <div style="font-weight:600;font-size:12px">KYC Reviews Analyst</div>
+          </td>
+          <td style="white-space:nowrap">UBS</td>
+          <td><span class="seniority-badge">analyst</span></td>
+          <td><span class="func-tag">kyc</span></td>
+          <td><span class="date-text">2026-03-12</span></td>
+          <td>
+            <span class="pill verify">
+              &#9888; Verify
+            </span>
+            <div class="note">Needs verification with HR</div>
+          </td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+          </td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+            <div class="note">India-hours role (compliance/controls/governance)</div>
+          </td>
+          <td>
+            <span class="pill hybrid">Hybrid</span>
+            <div class="note">3 days WFO</div>
+          </td>
+          <td>
+            <div class="mastery-text">CDD/EDD procedures, KYC lifecycle, AML regulations (PMLA, EU AMLD), PEP screening, sanctions lists (OFAC/OFSI/UN), risk rating models, remediation workflows</div>
+          </td>
+          <td>
+            
+            <a href="https://jobs.ubs.com/TGnewUI/Search/home/HomeWithPreLoad?partnerid=25008&amp;siteid=5012&amp;PageType=JobDetails&amp;jobid=336660" class="apply-link" target="_blank">Apply &rarr;</a>
+            
+          </td>
+        </tr>
+        
+        <tr data-company="UBS" data-creche="verify" data-shift="yes" data-pune="yes"
+            class="company-ubs">
+          <td style="color:var(--text-dim)">31</td>
+          <td style="max-width:260px">
+            <div style="font-weight:600;font-size:12px">AML KYC Business Risk Specialist</div>
+          </td>
+          <td style="white-space:nowrap">UBS</td>
+          <td><span class="seniority-badge">avp</span></td>
+          <td><span class="func-tag">aml</span></td>
+          <td><span class="date-text">2026-03-12</span></td>
+          <td>
+            <span class="pill verify">
+              &#9888; Verify
+            </span>
+            <div class="note">Needs verification with HR</div>
+          </td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+          </td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+            <div class="note">India-hours role (compliance/controls/governance)</div>
+          </td>
+          <td>
+            <span class="pill hybrid">Hybrid</span>
+            <div class="note">3 days WFO</div>
+          </td>
+          <td>
+            <div class="mastery-text">AML/CFT frameworks, transaction monitoring systems, SAR/STR filing, CDD/EDD, PMLA/FATF, typology-based detection, investigation techniques, Actimize/NICE</div>
+          </td>
+          <td>
+            
+            <a href="https://jobs.ubs.com/TGnewUI/Search/home/HomeWithPreLoad?partnerid=25008&amp;siteid=5012&amp;PageType=JobDetails&amp;jobid=336595" class="apply-link" target="_blank">Apply &rarr;</a>
+            
+          </td>
+        </tr>
+        
+        <tr data-company="UBS" data-creche="verify" data-shift="yes" data-pune="yes"
+            class="company-ubs">
+          <td style="color:var(--text-dim)">32</td>
+          <td style="max-width:260px">
+            <div style="font-weight:600;font-size:12px">Business Aligned Compliance Specialist</div>
+          </td>
+          <td style="white-space:nowrap">UBS</td>
+          <td><span class="seniority-badge">avp</span></td>
+          <td><span class="func-tag">compliance</span></td>
+          <td><span class="date-text">2026-03-12</span></td>
+          <td>
+            <span class="pill verify">
+              &#9888; Verify
+            </span>
+            <div class="note">Needs verification with HR</div>
+          </td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+          </td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+            <div class="note">India-hours role (compliance/controls/governance)</div>
+          </td>
+          <td>
+            <span class="pill hybrid">Hybrid</span>
+            <div class="note">3 days WFO</div>
+          </td>
+          <td>
+            <div class="mastery-text">Regulatory frameworks (FCA, RBI, MiFID II), compliance monitoring &amp; testing, policy lifecycle, regulatory change management, compliance risk assessment, breach management</div>
+          </td>
+          <td>
+            
+            <a href="https://jobs.ubs.com/TGnewUI/Search/home/HomeWithPreLoad?partnerid=25008&amp;siteid=5012&amp;PageType=JobDetails&amp;jobid=333775" class="apply-link" target="_blank">Apply &rarr;</a>
+            
+          </td>
+        </tr>
+        
+        <tr data-company="UBS" data-creche="verify" data-shift="verify" data-pune="yes"
+            class="company-ubs">
+          <td style="color:var(--text-dim)">33</td>
+          <td style="max-width:260px">
+            <div style="font-weight:600;font-size:12px">C&amp;ORC Specialist - APAC Operational Resilience</div>
+          </td>
+          <td style="white-space:nowrap">UBS</td>
+          <td><span class="seniority-badge">avp</span></td>
+          <td><span class="func-tag">operational resilience</span></td>
+          <td><span class="date-text">2026-03-12</span></td>
+          <td>
+            <span class="pill verify">
+              &#9888; Verify
+            </span>
+            <div class="note">Needs verification with HR</div>
+          </td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+          </td>
+          <td>
+            <span class="pill verify">
+              &#9888; Verify
+            </span>
+            <div class="note">May have on-call or overlap with UK/US - verify</div>
+          </td>
+          <td>
+            <span class="pill hybrid">Hybrid</span>
+            <div class="note">3 days WFO</div>
+          </td>
+          <td>
+            <div class="mastery-text">Business continuity planning (BCP), disaster recovery, impact tolerance, third-party risk, crisis management, regulatory expectations (FCA/PRA operational resilience)</div>
+          </td>
+          <td>
+            
+            <a href="https://jobs.ubs.com/TGnewUI/Search/home/HomeWithPreLoad?partnerid=25008&amp;siteid=5012&amp;PageType=JobDetails&amp;jobid=330762" class="apply-link" target="_blank">Apply &rarr;</a>
+            
+          </td>
+        </tr>
+        
+        <tr data-company="UBS" data-creche="verify" data-shift="yes" data-pune="yes"
+            class="company-ubs">
+          <td style="color:var(--text-dim)">34</td>
+          <td style="max-width:260px">
+            <div style="font-weight:600;font-size:12px">Business Risk Specialist - RCSA</div>
+          </td>
+          <td style="white-space:nowrap">UBS</td>
+          <td><span class="seniority-badge">avp</span></td>
+          <td><span class="func-tag">risk</span></td>
+          <td><span class="date-text">2026-03-12</span></td>
+          <td>
+            <span class="pill verify">
+              &#9888; Verify
+            </span>
+            <div class="note">Needs verification with HR</div>
+          </td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+          </td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+            <div class="note">India-hours role (risk function)</div>
+          </td>
+          <td>
+            <span class="pill hybrid">Hybrid</span>
+            <div class="note">3 days WFO</div>
+          </td>
+          <td>
+            <div class="mastery-text">Operational risk framework (Basel III), RCSA methodology, risk event management, KRI monitoring, risk appetite statements, three lines of defense model, stress testing</div>
+          </td>
+          <td>
+            
+            <a href="https://jobs.ubs.com/TGnewUI/Search/home/HomeWithPreLoad?partnerid=25008&amp;siteid=5012&amp;PageType=JobDetails&amp;jobid=327744" class="apply-link" target="_blank">Apply &rarr;</a>
+            
+          </td>
+        </tr>
+        
+        <tr data-company="UBS" data-creche="verify" data-shift="yes" data-pune="yes"
+            class="company-ubs">
+          <td style="color:var(--text-dim)">35</td>
+          <td style="max-width:260px">
+            <div style="font-weight:600;font-size:12px">Business Risk Analyst</div>
+          </td>
+          <td style="white-space:nowrap">UBS</td>
+          <td><span class="seniority-badge">analyst</span></td>
+          <td><span class="func-tag">risk</span></td>
+          <td><span class="date-text">2026-03-12</span></td>
+          <td>
+            <span class="pill verify">
+              &#9888; Verify
+            </span>
+            <div class="note">Needs verification with HR</div>
+          </td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+          </td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+            <div class="note">India-hours role (risk function)</div>
+          </td>
+          <td>
+            <span class="pill hybrid">Hybrid</span>
+            <div class="note">3 days WFO</div>
+          </td>
+          <td>
+            <div class="mastery-text">Operational risk framework (Basel III), RCSA methodology, risk event management, KRI monitoring, risk appetite statements, three lines of defense model, stress testing</div>
+          </td>
+          <td>
+            
+            <a href="https://jobs.ubs.com/TGnewUI/Search/home/HomeWithPreLoad?partnerid=25008&amp;siteid=5012&amp;PageType=JobDetails&amp;jobid=341988" class="apply-link" target="_blank">Apply &rarr;</a>
+            
+          </td>
+        </tr>
+        
+        <tr data-company="UBS" data-creche="verify" data-shift="yes" data-pune="yes"
+            class="company-ubs">
+          <td style="color:var(--text-dim)">36</td>
+          <td style="max-width:260px">
+            <div style="font-weight:600;font-size:12px">Financial Crime Prevention Sanctions Officer</div>
+          </td>
+          <td style="white-space:nowrap">UBS</td>
+          <td><span class="seniority-badge">avp</span></td>
+          <td><span class="func-tag">sanctions</span></td>
+          <td><span class="date-text">2026-03-12</span></td>
+          <td>
+            <span class="pill verify">
+              &#9888; Verify
+            </span>
+            <div class="note">Needs verification with HR</div>
+          </td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+          </td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+            <div class="note">India-hours role (compliance/controls/governance)</div>
+          </td>
+          <td>
+            <span class="pill hybrid">Hybrid</span>
+            <div class="note">3 days WFO</div>
+          </td>
+          <td>
+            <div class="mastery-text">OFAC/OFSI/EU/UN sanctions regimes, sanctions screening tools, payment screening (SWIFT), list management, true match vs false positive analysis, sanctions risk assessment</div>
+          </td>
+          <td>
+            
+            <a href="https://jobs.ubs.com/TGnewUI/Search/home/HomeWithPreLoad?partnerid=25008&amp;siteid=5012&amp;PageType=JobDetails&amp;jobid=330405" class="apply-link" target="_blank">Apply &rarr;</a>
+            
+          </td>
+        </tr>
+        
+        <tr data-company="UBS" data-creche="verify" data-shift="yes" data-pune="yes"
+            class="company-ubs">
+          <td style="color:var(--text-dim)">37</td>
+          <td style="max-width:260px">
+            <div style="font-weight:600;font-size:12px">Licensing Registration &amp; Regulatory Reporting Specialist</div>
+          </td>
+          <td style="white-space:nowrap">UBS</td>
+          <td><span class="seniority-badge">avp</span></td>
+          <td><span class="func-tag">regulatory</span></td>
+          <td><span class="date-text">2026-03-12</span></td>
+          <td>
+            <span class="pill verify">
+              &#9888; Verify
+            </span>
+            <div class="note">Needs verification with HR</div>
+          </td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+          </td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+            <div class="note">India-hours role (compliance/controls/governance)</div>
+          </td>
+          <td>
+            <span class="pill hybrid">Hybrid</span>
+            <div class="note">3 days WFO</div>
+          </td>
+          <td>
+            <div class="mastery-text">Regulatory reporting (RBI/SEC/FCA), licensing &amp; registration, regulatory change management, cross-border compliance, regulatory correspondence</div>
+          </td>
+          <td>
+            
+            <a href="https://www.efinancialcareers.com/jobs-India-Pune-Licensing_Registration__Regulatory_Reporting_Officer.id22565926" class="apply-link" target="_blank">Apply &rarr;</a>
+            
+          </td>
+        </tr>
+        
+        <tr data-company="BNY Mellon" data-creche="verify" data-shift="yes" data-pune="yes"
+            class="company-bny">
+          <td style="color:var(--text-dim)">38</td>
+          <td style="max-width:260px">
+            <div style="font-weight:600;font-size:12px">Director, Governance &amp; Enablement Lead - Risk &amp; Compliance</div>
+          </td>
+          <td style="white-space:nowrap">BNY Mellon</td>
+          <td><span class="seniority-badge">director</span></td>
+          <td><span class="func-tag">governance</span></td>
+          <td><span class="date-text">2026-03-12</span></td>
+          <td>
+            <span class="pill verify">
+              &#9888; Verify
+            </span>
+            <div class="note">Needs verification with HR</div>
+          </td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+          </td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+            <div class="note">India-hours role (compliance/controls/governance)</div>
+          </td>
+          <td>
+            <span class="pill hybrid">Hybrid</span>
+            <div class="note">4 days WFO</div>
+          </td>
+          <td>
+            <div class="mastery-text">Governance framework design, policy management lifecycle, committee/forum management, regulatory reporting, enterprise risk governance, board reporting</div>
+          </td>
+          <td>
+            
+            <a href="https://eofe.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1001/job/73881" class="apply-link" target="_blank">Apply &rarr;</a>
+            
+          </td>
+        </tr>
+        
+        <tr data-company="BNY Mellon" data-creche="verify" data-shift="yes" data-pune="yes"
+            class="company-bny">
+          <td style="color:var(--text-dim)">39</td>
+          <td style="max-width:260px">
+            <div style="font-weight:600;font-size:12px">Director, AI &amp; Innovation Lead - Risk &amp; Compliance</div>
+          </td>
+          <td style="white-space:nowrap">BNY Mellon</td>
+          <td><span class="seniority-badge">director</span></td>
+          <td><span class="func-tag">risk</span></td>
+          <td><span class="date-text">2026-03-12</span></td>
+          <td>
+            <span class="pill verify">
+              &#9888; Verify
+            </span>
+            <div class="note">Needs verification with HR</div>
+          </td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+          </td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+            <div class="note">India-hours role (risk function)</div>
+          </td>
+          <td>
+            <span class="pill hybrid">Hybrid</span>
+            <div class="note">4 days WFO</div>
+          </td>
+          <td>
+            <div class="mastery-text">Operational risk framework (Basel III), RCSA methodology, risk event management, KRI monitoring, risk appetite statements, three lines of defense model, stress testing</div>
+          </td>
+          <td>
+            
+            <a href="https://eofe.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1001/job/73879" class="apply-link" target="_blank">Apply &rarr;</a>
+            
+          </td>
+        </tr>
+        
+        <tr data-company="BNY Mellon" data-creche="verify" data-shift="yes" data-pune="yes"
+            class="company-bny">
+          <td style="color:var(--text-dim)">40</td>
+          <td style="max-width:260px">
+            <div style="font-weight:600;font-size:12px">SVP, Visualization Lead - Risk &amp; Compliance</div>
+          </td>
+          <td style="white-space:nowrap">BNY Mellon</td>
+          <td><span class="seniority-badge">svp</span></td>
+          <td><span class="func-tag">risk</span></td>
+          <td><span class="date-text">2026-03-12</span></td>
+          <td>
+            <span class="pill verify">
+              &#9888; Verify
+            </span>
+            <div class="note">Needs verification with HR</div>
+          </td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+          </td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+            <div class="note">India-hours role (risk function)</div>
+          </td>
+          <td>
+            <span class="pill hybrid">Hybrid</span>
+            <div class="note">4 days WFO</div>
+          </td>
+          <td>
+            <div class="mastery-text">Operational risk framework (Basel III), RCSA methodology, risk event management, KRI monitoring, risk appetite statements, three lines of defense model, stress testing</div>
+          </td>
+          <td>
+            
+            <a href="https://eofe.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1001/job/73565" class="apply-link" target="_blank">Apply &rarr;</a>
+            
+          </td>
+        </tr>
+        
+        <tr data-company="BNY Mellon" data-creche="verify" data-shift="yes" data-pune="yes"
+            class="company-bny">
+          <td style="color:var(--text-dim)">41</td>
+          <td style="max-width:260px">
+            <div style="font-weight:600;font-size:12px">SVP, Model Risk Management</div>
+          </td>
+          <td style="white-space:nowrap">BNY Mellon</td>
+          <td><span class="seniority-badge">svp</span></td>
+          <td><span class="func-tag">risk</span></td>
+          <td><span class="date-text">2026-03-12</span></td>
+          <td>
+            <span class="pill verify">
+              &#9888; Verify
+            </span>
+            <div class="note">Needs verification with HR</div>
+          </td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+          </td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+            <div class="note">India-hours role (risk function)</div>
+          </td>
+          <td>
+            <span class="pill hybrid">Hybrid</span>
+            <div class="note">4 days WFO</div>
+          </td>
+          <td>
+            <div class="mastery-text">Operational risk framework (Basel III), RCSA methodology, risk event management, KRI monitoring, risk appetite statements, three lines of defense model, stress testing</div>
+          </td>
+          <td>
+            
+            <a href="https://eofe.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1001/job/72465" class="apply-link" target="_blank">Apply &rarr;</a>
+            
+          </td>
+        </tr>
+        
+        <tr data-company="BNY Mellon" data-creche="verify" data-shift="yes" data-pune="yes"
+            class="company-bny">
+          <td style="color:var(--text-dim)">42</td>
+          <td style="max-width:260px">
+            <div style="font-weight:600;font-size:12px">VP, Data Governance</div>
+          </td>
+          <td style="white-space:nowrap">BNY Mellon</td>
+          <td><span class="seniority-badge">vp</span></td>
+          <td><span class="func-tag">data governance</span></td>
+          <td><span class="date-text">2026-03-12</span></td>
+          <td>
+            <span class="pill verify">
+              &#9888; Verify
+            </span>
+            <div class="note">Needs verification with HR</div>
+          </td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+          </td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+            <div class="note">India-hours role (compliance/controls/governance)</div>
+          </td>
+          <td>
+            <span class="pill hybrid">Hybrid</span>
+            <div class="note">4 days WFO</div>
+          </td>
+          <td>
+            <div class="mastery-text">Data quality frameworks, data lineage &amp; cataloging, metadata management, DPDP Act/GDPR, records retention policies, data classification, master data management</div>
+          </td>
+          <td>
+            
+            <a href="https://eofe.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1001/job/72054" class="apply-link" target="_blank">Apply &rarr;</a>
+            
+          </td>
+        </tr>
+        
+        <tr data-company="BNY Mellon" data-creche="verify" data-shift="yes" data-pune="yes"
+            class="company-bny">
+          <td style="color:var(--text-dim)">43</td>
+          <td style="max-width:260px">
+            <div style="font-weight:600;font-size:12px">VP, Auditor Finance</div>
+          </td>
+          <td style="white-space:nowrap">BNY Mellon</td>
+          <td><span class="seniority-badge">vp</span></td>
+          <td><span class="func-tag">audit</span></td>
+          <td><span class="date-text">2026-03-12</span></td>
+          <td>
+            <span class="pill verify">
+              &#9888; Verify
+            </span>
+            <div class="note">Needs verification with HR</div>
+          </td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+          </td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+            <div class="note">India-hours role (compliance/controls/governance)</div>
+          </td>
+          <td>
+            <span class="pill hybrid">Hybrid</span>
+            <div class="note">4 days WFO</div>
+          </td>
+          <td>
+            <div class="mastery-text">Risk-based audit methodology, IIA standards, audit planning &amp; scoping, control testing, issue tracking &amp; remediation, SOX audit, regulatory exam prep</div>
+          </td>
+          <td>
+            
+            <a href="https://eofe.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1001/job/73854" class="apply-link" target="_blank">Apply &rarr;</a>
+            
+          </td>
+        </tr>
+        
+        <tr data-company="BNY Mellon" data-creche="verify" data-shift="yes" data-pune="yes"
+            class="company-bny">
+          <td style="color:var(--text-dim)">44</td>
+          <td style="max-width:260px">
+            <div style="font-weight:600;font-size:12px">VP, Auditor</div>
+          </td>
+          <td style="white-space:nowrap">BNY Mellon</td>
+          <td><span class="seniority-badge">vp</span></td>
+          <td><span class="func-tag">audit</span></td>
+          <td><span class="date-text">2026-03-12</span></td>
+          <td>
+            <span class="pill verify">
+              &#9888; Verify
+            </span>
+            <div class="note">Needs verification with HR</div>
+          </td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+          </td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+            <div class="note">India-hours role (compliance/controls/governance)</div>
+          </td>
+          <td>
+            <span class="pill hybrid">Hybrid</span>
+            <div class="note">4 days WFO</div>
+          </td>
+          <td>
+            <div class="mastery-text">Risk-based audit methodology, IIA standards, audit planning &amp; scoping, control testing, issue tracking &amp; remediation, SOX audit, regulatory exam prep</div>
+          </td>
+          <td>
+            
+            <a href="https://eofe.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1001/job/73855" class="apply-link" target="_blank">Apply &rarr;</a>
+            
+          </td>
+        </tr>
+        
+        <tr data-company="BNY Mellon" data-creche="verify" data-shift="yes" data-pune="yes"
+            class="company-bny">
+          <td style="color:var(--text-dim)">45</td>
+          <td style="max-width:260px">
+            <div style="font-weight:600;font-size:12px">Senior Specialist, Compliance &amp; Control</div>
+          </td>
+          <td style="white-space:nowrap">BNY Mellon</td>
+          <td><span class="seniority-badge">senior specialist</span></td>
+          <td><span class="func-tag">compliance</span></td>
+          <td><span class="date-text">2026-03-12</span></td>
+          <td>
+            <span class="pill verify">
+              &#9888; Verify
+            </span>
+            <div class="note">Needs verification with HR</div>
+          </td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+          </td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+            <div class="note">India-hours role (compliance/controls/governance)</div>
+          </td>
+          <td>
+            <span class="pill hybrid">Hybrid</span>
+            <div class="note">4 days WFO</div>
+          </td>
+          <td>
+            <div class="mastery-text">Regulatory frameworks (FCA, RBI, MiFID II), compliance monitoring &amp; testing, policy lifecycle, regulatory change management, compliance risk assessment, breach management</div>
+          </td>
+          <td>
+            
+            <a href="https://eofe.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1001/job/74014" class="apply-link" target="_blank">Apply &rarr;</a>
+            
+          </td>
+        </tr>
+        
+        <tr data-company="BNY Mellon" data-creche="verify" data-shift="yes" data-pune="yes"
+            class="company-bny">
+          <td style="color:var(--text-dim)">46</td>
+          <td style="max-width:260px">
+            <div style="font-weight:600;font-size:12px">Specialist, Compliance &amp; Control II</div>
+          </td>
+          <td style="white-space:nowrap">BNY Mellon</td>
+          <td><span class="seniority-badge">specialist</span></td>
+          <td><span class="func-tag">compliance</span></td>
+          <td><span class="date-text">2026-03-12</span></td>
+          <td>
+            <span class="pill verify">
+              &#9888; Verify
+            </span>
+            <div class="note">Needs verification with HR</div>
+          </td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+          </td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+            <div class="note">India-hours role (compliance/controls/governance)</div>
+          </td>
+          <td>
+            <span class="pill hybrid">Hybrid</span>
+            <div class="note">4 days WFO</div>
+          </td>
+          <td>
+            <div class="mastery-text">Regulatory frameworks (FCA, RBI, MiFID II), compliance monitoring &amp; testing, policy lifecycle, regulatory change management, compliance risk assessment, breach management</div>
+          </td>
+          <td>
+            
+            <a href="https://eofe.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1001/job/73718" class="apply-link" target="_blank">Apply &rarr;</a>
+            
+          </td>
+        </tr>
+        
+        <tr data-company="BNY Mellon" data-creche="verify" data-shift="yes" data-pune="yes"
+            class="company-bny">
+          <td style="color:var(--text-dim)">47</td>
+          <td style="max-width:260px">
+            <div style="font-weight:600;font-size:12px">Specialist, Control II</div>
+          </td>
+          <td style="white-space:nowrap">BNY Mellon</td>
+          <td><span class="seniority-badge">specialist</span></td>
+          <td><span class="func-tag">controls</span></td>
+          <td><span class="date-text">2026-03-12</span></td>
+          <td>
+            <span class="pill verify">
+              &#9888; Verify
+            </span>
+            <div class="note">Needs verification with HR</div>
+          </td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+          </td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+            <div class="note">India-hours role (compliance/controls/governance)</div>
+          </td>
+          <td>
+            <span class="pill hybrid">Hybrid</span>
+            <div class="note">4 days WFO</div>
+          </td>
+          <td>
+            <div class="mastery-text">Internal controls framework (COSO), control testing &amp; assurance, SOX compliance, control gap remediation, Barclays Controls Framework, risk &amp; control self-assessment</div>
+          </td>
+          <td>
+            
+            <a href="https://eofe.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1001/job/73901" class="apply-link" target="_blank">Apply &rarr;</a>
+            
+          </td>
+        </tr>
+        
+        <tr data-company="BNY Mellon" data-creche="verify" data-shift="yes" data-pune="yes"
+            class="company-bny">
+          <td style="color:var(--text-dim)">48</td>
+          <td style="max-width:260px">
+            <div style="font-weight:600;font-size:12px">Senior Specialist, Market and Liquidity Risk</div>
+          </td>
+          <td style="white-space:nowrap">BNY Mellon</td>
+          <td><span class="seniority-badge">senior specialist</span></td>
+          <td><span class="func-tag">risk</span></td>
+          <td><span class="date-text">2026-03-12</span></td>
+          <td>
+            <span class="pill verify">
+              &#9888; Verify
+            </span>
+            <div class="note">Needs verification with HR</div>
+          </td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+          </td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+            <div class="note">India-hours role (risk function)</div>
+          </td>
+          <td>
+            <span class="pill hybrid">Hybrid</span>
+            <div class="note">4 days WFO</div>
+          </td>
+          <td>
+            <div class="mastery-text">Operational risk framework (Basel III), RCSA methodology, risk event management, KRI monitoring, risk appetite statements, three lines of defense model, stress testing</div>
+          </td>
+          <td>
+            
+            <a href="https://eofe.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1001/job/72470" class="apply-link" target="_blank">Apply &rarr;</a>
+            
+          </td>
+        </tr>
+        
+        <tr data-company="BNY Mellon" data-creche="verify" data-shift="yes" data-pune="yes"
+            class="company-bny">
+          <td style="color:var(--text-dim)">49</td>
+          <td style="max-width:260px">
+            <div style="font-weight:600;font-size:12px">VP, External Reporting</div>
+          </td>
+          <td style="white-space:nowrap">BNY Mellon</td>
+          <td><span class="seniority-badge">vp</span></td>
+          <td><span class="func-tag">regulatory</span></td>
+          <td><span class="date-text">2026-03-12</span></td>
+          <td>
+            <span class="pill verify">
+              &#9888; Verify
+            </span>
+            <div class="note">Needs verification with HR</div>
+          </td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+          </td>
+          <td>
+            <span class="pill yes">
+              &#10003; Yes
+            </span>
+            <div class="note">India-hours role (compliance/controls/governance)</div>
+          </td>
+          <td>
+            <span class="pill hybrid">Hybrid</span>
+            <div class="note">4 days WFO</div>
+          </td>
+          <td>
+            <div class="mastery-text">Regulatory reporting (RBI/SEC/FCA), licensing &amp; registration, regulatory change management, cross-border compliance, regulatory correspondence</div>
+          </td>
+          <td>
+            
+            <a href="https://eofe.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1001/job/71019" class="apply-link" target="_blank">Apply &rarr;</a>
+            
+          </td>
+        </tr>
+        
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+  let activeCompany = 'all';
+  let activeCheck = null;
+
+  function filterCompany(company) {
+    activeCompany = company;
+    activeCheck = null;
+    applyFilters();
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    event.target.classList.add('active');
+  }
+
+  function filterCheck(type) {
+    activeCheck = type;
+    activeCompany = 'all';
+    applyFilters();
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    event.target.classList.add('active');
+  }
+
+  function applyFilters() {
+    document.querySelectorAll('#roles-table tbody tr').forEach(tr => {
+      let show = true;
+      if (activeCompany !== 'all' && tr.dataset.company !== activeCompany) show = false;
+      if (activeCheck === 'creche' && tr.dataset.creche !== 'yes') show = false;
+      if (activeCheck === 'shift' && tr.dataset.shift !== 'yes') show = false;
+      if (activeCheck === 'all-green') {
+        if (tr.dataset.creche !== 'yes' || tr.dataset.shift !== 'yes' || tr.dataset.pune !== 'yes') show = false;
+      }
+      tr.classList.toggle('hidden', !show);
+    });
+  }
+</script>
+
+</body>
+</html>
