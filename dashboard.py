@@ -13,10 +13,24 @@ from datetime import datetime
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from flask import Flask, render_template_string
+from flask import Flask, render_template_string, redirect, jsonify
 import db
+import subprocess
 
 app = Flask(__name__)
+
+GITHUB_REPO = "VizuaraAI/pune-job-tracker"
+
+
+@app.route("/fetch")
+def fetch_roles():
+    """Run the daily scraper and redirect back to dashboard."""
+    script = os.path.join(os.path.dirname(os.path.abspath(__file__)), "scrape_daily.py")
+    result = subprocess.run(
+        [sys.executable, script, "--force"],
+        capture_output=True, text=True, timeout=120,
+    )
+    return redirect("/")
 
 # ── WFH policies per company (researched March 2026) ────────────────────────
 WFH_POLICY = {
@@ -276,6 +290,27 @@ DASHBOARD_HTML = r"""
     max-width: 260px;
   }
   .date-text { font-size: 11px; color: var(--text-dim); white-space: nowrap; }
+  .fetch-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 8px 18px; border-radius: 8px; border: 1px solid var(--accent);
+    background: var(--accent-glow); color: var(--accent);
+    font-size: 13px; font-weight: 600; cursor: pointer; transition: all .2s;
+  }
+  .fetch-btn:hover { background: var(--accent); color: #fff; }
+  .fetch-btn:disabled { opacity: .5; cursor: not-allowed; }
+  .fetch-btn .spinner {
+    display: none; width: 14px; height: 14px;
+    border: 2px solid transparent; border-top: 2px solid currentColor;
+    border-radius: 50%; animation: spin .8s linear infinite;
+  }
+  .fetch-btn.loading .spinner { display: inline-block; }
+  .fetch-btn.loading .fetch-icon { display: none; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .fetch-status {
+    font-size: 11px; color: var(--green); margin-left: 8px;
+    opacity: 0; transition: opacity .3s;
+  }
+  .fetch-status.show { opacity: 1; }
   @media (max-width: 768px) {
     .container { padding: 16px; }
     .topbar { padding: 12px 16px; }
@@ -289,7 +324,15 @@ DASHBOARD_HTML = r"""
     <h1>Roles Pipeline</h1>
     <div class="sub">Pune Banking Job Search &middot; {{ now.strftime('%d %b %Y') }}</div>
   </div>
-  <div class="sub">{{ total }} open roles tracked</div>
+  <div style="display:flex;align-items:center;gap:12px">
+    <div class="sub">{{ total }} open roles tracked</div>
+    <button class="fetch-btn" id="fetchBtn" onclick="fetchRoles()">
+      <span class="fetch-icon">&#8635;</span>
+      <span class="spinner"></span>
+      Fetch New Roles
+    </button>
+    <span class="fetch-status" id="fetchStatus"></span>
+  </div>
 </div>
 
 <div class="container">
@@ -408,6 +451,68 @@ DASHBOARD_HTML = r"""
       }
       tr.classList.toggle('hidden', !show);
     });
+  }
+
+  const GITHUB_REPO = 'VizuaraAI/pune-job-tracker';
+  const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+
+  async function fetchRoles() {
+    const btn = document.getElementById('fetchBtn');
+    const status = document.getElementById('fetchStatus');
+    btn.classList.add('loading');
+    btn.disabled = true;
+    status.classList.remove('show');
+    status.textContent = '';
+
+    try {
+      if (isLocal) {
+        // Running locally via Flask — hit the /fetch endpoint
+        window.location.href = '/fetch';
+        return;
+      }
+
+      // On GitHub Pages — trigger the workflow via GitHub API
+      const token = localStorage.getItem('gh_pat');
+      if (!token) {
+        const t = prompt('Enter your GitHub Personal Access Token (needs workflow scope).\nThis is stored locally in your browser only.');
+        if (!t) { btn.classList.remove('loading'); btn.disabled = false; return; }
+        localStorage.setItem('gh_pat', t);
+      }
+
+      const pat = localStorage.getItem('gh_pat');
+      const resp = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/actions/workflows/daily-scrape.yml/dispatches`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `token ${pat}`,
+          'Accept': 'application/vnd.github.v3+json',
+        },
+        body: JSON.stringify({ ref: 'main' }),
+      });
+
+      if (resp.status === 204) {
+        status.textContent = 'Scrape triggered! Page will update in ~2 min.';
+        status.style.color = 'var(--green)';
+        status.classList.add('show');
+        // Auto-reload after 2 minutes
+        setTimeout(() => window.location.reload(), 120000);
+      } else if (resp.status === 401 || resp.status === 403) {
+        localStorage.removeItem('gh_pat');
+        status.textContent = 'Invalid token. Click again to re-enter.';
+        status.style.color = 'var(--red)';
+        status.classList.add('show');
+      } else {
+        status.textContent = `Error: ${resp.status}`;
+        status.style.color = 'var(--red)';
+        status.classList.add('show');
+      }
+    } catch (err) {
+      status.textContent = 'Network error. Try again.';
+      status.style.color = 'var(--red)';
+      status.classList.add('show');
+    }
+
+    btn.classList.remove('loading');
+    btn.disabled = false;
   }
 </script>
 
