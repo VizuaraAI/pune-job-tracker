@@ -142,8 +142,9 @@ def index():
         # Interview mastery
         role['mastery'] = get_mastery(role.get('function_area'), role.get('title'))
 
-        # Posted date
-        role['posted'] = role.get('created_at', '')[:10] if role.get('created_at') else '-'
+        # Posted date (use posted_date if available, fallback to created_at)
+        pd = role.get('posted_date') or role.get('created_at', '')
+        role['posted'] = pd[:10] if pd else '-'
 
     # Counts per company
     company_counts = {}
